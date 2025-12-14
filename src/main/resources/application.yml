@@ -1,25 +1,27 @@
 spring:
   application:
     name: shopmind-user-service
-  datasource:
-    url: jdbc:postgresql://localhost:5432/shopmind-dev?useSSL=false&serverTimezone=Asia/Shanghai&stringtype=unspecified
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.postgresql.Driver
+  cloud:
+    loadbalancer:
+      nacos:
+        enabled: true
+    nacos:
+      server-addr: 127.0.0.1:8848
+      username: nacos
+      password: nacos
+      config:
+        namespace: shopmind-dev
+        file-extension: yaml
+        group: DEFAULT_GROUP
+        shared-configs:
+          - data-id: common.yaml
+            group: DEFAULT_GROUP
+            refresh: true
+      discovery:
+        namespace: shopmind-dev
+        enabled: true
+  config:
+    import: "nacos:${spring.application.name}.yaml,nacos:common.yaml"
+server:
+  port: 8082
 
-    # HikariCP 连接池配置（Spring Boot 默认使用 Hikari）
-    hikari:
-      pool-name: ShopMindHikariPool
-      maximum-pool-size: 20          # 最大连接数（根据负载调整）
-      minimum-idle: 5                # 最小空闲连接
-      idle-timeout: 30000            # 空闲超时（30秒）
-      max-lifetime: 1800000          # 连接最大生命周期（30分钟）
-      connection-timeout: 20000      # 获取连接超时（20秒）
-      connection-test-query: SELECT 1
-
-mybatis-plus:
-  type-aliases-package: com.shopmind.entity
-  mapper-locations: classpath:mapper/**.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启sql日志
-    map-underscore-to-camel-case: true  # 驼峰命名，默认是 true
