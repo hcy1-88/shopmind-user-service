@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shopmind.mapper.UsersWechatLoginTicketsMapper">
+
+    <resultMap id="BaseResultMap" type="com.shopmind.entity.UsersWechatLoginTickets">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="ticket" column="ticket" jdbcType="VARCHAR"/>
+            <result property="qrCodeUrl" column="qr_code_url" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="VARCHAR"/>
+            <result property="openid" column="openid" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="scannedAt" column="scanned_at" jdbcType="TIMESTAMP"/>
+            <result property="confirmedAt" column="confirmed_at" jdbcType="TIMESTAMP"/>
+            <result property="expiredAt" column="expired_at" jdbcType="TIMESTAMP"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,ticket,qr_code_url,
+        status,openid,user_id,
+        scanned_at,confirmed_at,expired_at,
+        created_at
+    </sql>
+</mapper>
