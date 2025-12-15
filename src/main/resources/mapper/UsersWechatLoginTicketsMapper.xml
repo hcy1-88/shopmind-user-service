@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shopmind.mapper.UsersWechatLoginTicketsMapper">
+<mapper namespace="com.shopmind.usercore.mapper.UsersWechatLoginTicketsMapper">
 
-    <resultMap id="BaseResultMap" type="com.shopmind.entity.UsersWechatLoginTickets">
+    <resultMap id="BaseResultMap" type="com.shopmind.usercore.entity.UserWechatLoginTicket">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="ticket" column="ticket" jdbcType="VARCHAR"/>
             <result property="qrCodeUrl" column="qr_code_url" jdbcType="VARCHAR"/>
