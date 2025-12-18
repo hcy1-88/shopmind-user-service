@@ -1,5 +1,7 @@
 package com.shopmind.usercore.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.shopmind.usercore.constant.GenderConst;
@@ -84,25 +86,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         }
 
         // 构建更新对象（只设置非 null 字段）
-        User update = new User();
-        update.setId(userId);
-
-        if (request.getNickname() != null) {
-            update.setNickname(request.getNickname());
-        }
-        if (request.getAvatar() != null) {
-            update.setAvatar(request.getAvatar());
-        }
-        if (request.getGender() != null) {
-            if (!GenderConst.isValid(request.getGender())) {
-                throw new UserServiceException("USER0004");
-            }
-            update.setGender(request.getGender());
-        }
-        if (request.getAge() != null) {
-            update.setAge(request.getAge());
-        }
-
+        User update = convertToEntity(userId, request);
         // 使用 updateById，MyBatisPlus 会自动忽略 null 字段（需确保字段为 null 而不是 ""）
         this.updateById(update);
 
@@ -115,17 +99,27 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
     private UserResponseDTO convertToDTO(User user) {
         if (user == null) return null;
-
         UserResponseDTO dto = new UserResponseDTO();
-        dto.setId(user.getId());
-        dto.setPhoneNumber(user.getPhoneNumber());
-        dto.setNickname(user.getNickname());
-        dto.setAvatar(user.getAvatar());
+        BeanUtil.copyProperties(user, dto, CopyOptions.create().setIgnoreNullValue(true));
         dto.setGender(GenderConst.toChinese(user.getGender()));
-        dto.setAge(user.getAge());
-        dto.setCreatedAt(user.getCreatedAt());
-        dto.setUpdatedAt(user.getUpdatedAt());
         return dto;
+    }
+
+    private User convertToEntity(Long userId, UpdateUserRequest request) {
+        User user = new User();
+        user.setId(userId);
+        BeanUtil.copyProperties(
+                request,
+                user,
+                CopyOptions.create().ignoreNullValue()  // 跳过 null 字段
+        );
+        if (request.getGender() != null) {
+            if (!GenderConst.isValid(request.getGender())) {
+                throw new UserServiceException("USER0004");
+            }
+            user.setGender(request.getGender());
+        }
+        return user;
     }
 }
 

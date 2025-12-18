@@ -31,6 +31,11 @@ public class User {
     private String nickname;
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
      * 头像URL
      */
     private String avatar;
