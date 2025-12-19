@@ -31,10 +31,24 @@ public interface UsersService extends IService<User> {
      * @param userId 用户 id
      * @return 用户信息
      */
-    UserResponseDTO getByUserId(String userId);
+    UserResponseDTO getByUserId(Long userId);
 
     /**
      * 更新用户
      */
     UserResponseDTO updateUser(Long userId, UpdateUserRequest request);
+
+    /**
+     * 更新密码（已经 hash）
+     * @param userId user id
+     * @param passwordHashed 密码
+     */
+    void updatePassword(Long userId, String passwordHashed);
+
+    /**
+     * 手机号设置密码
+     * @param phoneNumber 手机号
+     * @param passwordHashed 密码（已哈希）
+     */
+    void setPasswordByPhoneNumber(String phoneNumber, String passwordHashed);
 }

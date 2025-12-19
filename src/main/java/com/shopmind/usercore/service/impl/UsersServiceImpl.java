@@ -65,7 +65,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     }
 
     @Override
-    public UserResponseDTO getByUserId(String userId) {
+    public UserResponseDTO getByUserId(Long userId) {
         return convertToDTO(this.getById(userId));
     }
 
@@ -95,6 +95,24 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         return convertToDTO(updated);
     }
 
+    @Override
+    public void updatePassword(Long userId, String passwordHashed) {
+        User user = new User();
+        user.setId(userId);
+        user.setPassword(passwordHashed);
+        this.updateById(user);
+    }
+
+    @Override
+    public void setPasswordByPhoneNumber(String phoneNumber, String passwordHashed) {
+        User entity = new LambdaQueryWrapper<User>().eq(User::getPhoneNumber, phoneNumber).getEntity();
+        if (entity == null) {
+            throw new UserServiceException("USER0005");
+        }
+        entity.setPassword(passwordHashed);
+        this.updateById(entity);
+    }
+
     // ------------------ 工具方法 ------------------
 
     private UserResponseDTO convertToDTO(User user) {
@@ -102,6 +120,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         UserResponseDTO dto = new UserResponseDTO();
         BeanUtil.copyProperties(user, dto, CopyOptions.create().setIgnoreNullValue(true));
         dto.setGender(GenderConst.toChinese(user.getGender()));
+        dto.setPasswordHash(user.getPassword());
         return dto;
     }
 

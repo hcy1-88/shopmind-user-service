@@ -1,10 +1,19 @@
 package com.shopmind.usercore.controller;
 
+import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Preconditions;
+import com.shopmind.framework.annotation.RequireAuth;
+import com.shopmind.framework.constant.ServiceNameConstant;
+import com.shopmind.framework.constant.ShopmindHeaderConstant;
 import com.shopmind.framework.context.ResultContext;
+import com.shopmind.framework.context.UserContext;
+import com.shopmind.usercore.dto.request.SetPasswordRequest;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
+import com.shopmind.usercore.exception.UserServiceException;
 import com.shopmind.usercore.service.UsersService;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -47,7 +56,7 @@ public class UserController {
      * @return 用户
      */
     @GetMapping("/{userId}")
-    ResultContext<UserResponseDTO> getUserByUserId(@PathVariable("userId") String userId){
+    ResultContext<UserResponseDTO> getUserByUserId(@PathVariable("userId") Long userId){
         UserResponseDTO byUserId = usersService.getByUserId(userId);
         return ResultContext.success(byUserId);
     }
@@ -66,4 +75,36 @@ public class UserController {
         return ResultContext.success(updated);
     }
 
+    /**
+     * 为已登录的用户重置密码
+     * @param request 密码
+     */
+    @RequireAuth
+    @PostMapping("/password")
+    public ResultContext<Void> updatePasswordForLoggedIn(
+            @RequestHeader(ShopmindHeaderConstant.Calling_SERVICE_HEADER) String callerService,
+            @Valid @RequestBody SetPasswordRequest request) {
+        if (StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
+            throw new UserServiceException("USER0006");
+        }
+        usersService.updatePassword(UserContext.userId(), request.getNewPassword());
+        return ResultContext.success();
+    }
+
+
+    /**
+     * 手机号设置密码
+     */
+    @PostMapping("/password/{phoneNumber}")
+    public ResultContext<Void> setPasswordByPhoneNumber(
+            @RequestHeader(ShopmindHeaderConstant.Calling_SERVICE_HEADER) String callerService,
+            @PathVariable("phoneNumber") String phoneNumber,
+            @Valid @RequestBody SetPasswordRequest request) {
+        if (StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
+            throw new UserServiceException("USER0006");
+        }
+        Preconditions.checkNotNull(phoneNumber, "手机号不能为空");
+        usersService.setPasswordByPhoneNumber(phoneNumber, request.getNewPassword());
+        return ResultContext.success();
+    }
 }

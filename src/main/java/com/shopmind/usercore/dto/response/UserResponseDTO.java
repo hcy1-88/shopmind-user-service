@@ -14,4 +14,8 @@ public class UserResponseDTO {
     private Integer age;
     private Date createdAt;
     private Date updatedAt;
+    /**
+     * 单向 Hash 加密过的密码
+     */
+    private String passwordHash;
 }
