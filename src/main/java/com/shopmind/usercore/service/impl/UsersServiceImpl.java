@@ -8,7 +8,7 @@ import com.shopmind.usercore.constant.GenderConst;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
 import com.shopmind.usercore.entity.User;
-import com.shopmind.usercore.exception.UserServiceException;
+import com.shopmind.usercore.exception.UserServiceClientException;
 import com.shopmind.usercore.properties.UserDefaultProperties;
 import com.shopmind.usercore.service.UsersService;
 import com.shopmind.usercore.mapper.UsersMapper;
@@ -50,7 +50,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     public UserResponseDTO createUserByPhoneNumber(String phoneNumber) {
         // 先查是否存在
         if (this.getUserByPhoneNumber(phoneNumber) != null) {
-            throw new UserServiceException("USER0001");
+            throw new UserServiceClientException("USER0001");
         }
 
         User user = new User();
@@ -76,13 +76,13 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     @Transactional(rollbackFor = Exception.class)
     public UserResponseDTO updateUser(Long userId, UpdateUserRequest request) {
         if (userId == null) {
-            throw new UserServiceException("USER0002");
+            throw new UserServiceClientException("USER0002");
         }
 
         // 检查用户是否存在
         User existing = this.getById(userId);
         if (existing == null || existing.getDeletedAt() != null) {
-            throw new UserServiceException("USER0003");
+            throw new UserServiceClientException("USER0003");
         }
 
         // 构建更新对象（只设置非 null 字段）
@@ -107,7 +107,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
     public void setPasswordByPhoneNumber(String phoneNumber, String passwordHashed) {
         User entity = new LambdaQueryWrapper<User>().eq(User::getPhoneNumber, phoneNumber).getEntity();
         if (entity == null) {
-            throw new UserServiceException("USER0005");
+            throw new UserServiceClientException("USER0005");
         }
         entity.setPassword(passwordHashed);
         this.updateById(entity);
@@ -134,7 +134,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         );
         if (request.getGender() != null) {
             if (!GenderConst.isValid(request.getGender())) {
-                throw new UserServiceException("USER0004");
+                throw new UserServiceClientException("USER0004");
             }
             user.setGender(request.getGender());
         }

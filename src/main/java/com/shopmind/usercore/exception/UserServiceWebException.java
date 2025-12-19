@@ -6,28 +6,9 @@ import java.io.Serial;
 import java.util.Map;
 
 /**
- * 用户服务业务异常类
- * 继承自 ShopmindException，用于处理用户服务相关的业务异常
- *
- * 使用示例：
- * <pre>
- * // 示例1：简单抛出异常
- * throw new UserServiceException("USER0001");
- *
- * // 示例2：带参数的异常
- * throw new UserServiceException("USER0002", userId);
- *
- * // 示例3：多参数异常
- * throw new UserServiceException("USER0302", userId, currentBalance, requiredAmount);
- *
- * // 示例4：带上下文信息的异常
- * Map<String, Object> context = new HashMap<>();
- * context.put("userId", userId);
- * context.put("operator", currentOperator);
- * throw new UserServiceException("USER0101", context, userId);
- * </pre>
+ * 用户服务业务异常类。继承自 ShopmindException，便于被全局异常处理器捕获 返回 ResultContext
  */
-public class UserServiceException extends ShopmindException {
+public class UserServiceWebException extends ShopmindException {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -44,7 +25,7 @@ public class UserServiceException extends ShopmindException {
      *
      * @param code 错误码（如 "USER0001"）
      */
-    public UserServiceException(String code) {
+    public UserServiceWebException(String code) {
         super(code, MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code));
     }
 
@@ -55,7 +36,7 @@ public class UserServiceException extends ShopmindException {
      * @param code 错误码（如 "USER0002"）
      * @param args 参数（按顺序填充消息模板中的 {}, {}, {}...）
      */
-    public UserServiceException(String code, Object... args) {
+    public UserServiceWebException(String code, Object... args) {
         super(code, MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code, args));
     }
 
@@ -65,7 +46,7 @@ public class UserServiceException extends ShopmindException {
      * @param code    错误码
      * @param message 错误消息
      */
-    public UserServiceException(String code, String message) {
+    public UserServiceWebException(String code, String message) {
         super(code, message);
     }
 
@@ -77,7 +58,7 @@ public class UserServiceException extends ShopmindException {
      * @param context 上下文信息（如 userId, operator 等）
      * @param args    参数
      */
-    public UserServiceException(String code, Map<String, Object> context, Object... args) {
+    public UserServiceWebException(String code, Map<String, Object> context, Object... args) {
         super(code, MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code, args), context);
     }
 
@@ -89,7 +70,7 @@ public class UserServiceException extends ShopmindException {
      * @param cause 原始异常
      * @param args  参数
      */
-    public UserServiceException(String code, Throwable cause, Object... args) {
+    public UserServiceWebException(String code, Throwable cause, Object... args) {
         super(code, MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code, args), cause);
     }
 }
