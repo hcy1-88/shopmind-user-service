@@ -13,6 +13,7 @@ import com.shopmind.usercore.properties.UserDefaultProperties;
 import com.shopmind.usercore.service.UsersService;
 import com.shopmind.usercore.mapper.UsersMapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 * @description 针对表【sm_users(用户基本信息表)】的数据库操作Service实现
 * @createDate 2025-12-12 20:21:36
 */
+@Slf4j
 @Service
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements UsersService{
     @Resource
@@ -105,8 +107,13 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
     @Override
     public void setPasswordByPhoneNumber(String phoneNumber, String passwordHashed) {
-        User entity = new LambdaQueryWrapper<User>().eq(User::getPhoneNumber, phoneNumber).getEntity();
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<User>()
+                .eq(User::getPhoneNumber, phoneNumber)
+                .isNull(User::getDeletedAt); // 软删除过滤（重要！）
+
+        User entity = this.getOne(wrapper);
         if (entity == null) {
+            log.error("手机号 {} 未注册", phoneNumber);
             throw new UserServiceException("USER0005");
         }
         entity.setPassword(passwordHashed);
@@ -115,15 +122,20 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
 
     // ------------------ 工具方法 ------------------
 
+    /**
+     * 返回响应用
+     */
     private UserResponseDTO convertToDTO(User user) {
         if (user == null) return null;
         UserResponseDTO dto = new UserResponseDTO();
         BeanUtil.copyProperties(user, dto, CopyOptions.create().setIgnoreNullValue(true));
-        dto.setGender(GenderConst.toChinese(user.getGender()));
         dto.setPasswordHash(user.getPassword());
         return dto;
     }
 
+    /**
+     * 入库用
+     */
     private User convertToEntity(Long userId, UpdateUserRequest request) {
         User user = new User();
         user.setId(userId);
