@@ -1,5 +1,6 @@
 package com.shopmind.usercore.exception;
 
+import com.shopmind.framework.exception.ShopmindException;
 import com.shopmind.framework.util.MessageSourceHelper;
 
 import java.io.Serial;
@@ -9,19 +10,9 @@ import java.io.Serial;
  * Author: huangcy
  * Date: 2025-12-19
  */
-public class UserServiceClientException extends RuntimeException {
+public class UserServiceException extends ShopmindException {
     @Serial
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 错误码
-     */
-    private final String code;
-
-    /**
-     * 错误消息（支持动态填充）
-     */
-    private final String message;
 
     /**
      * 资源文件基础名称
@@ -35,9 +26,8 @@ public class UserServiceClientException extends RuntimeException {
      *
      * @param code 错误码（如 "USER0001"）
      */
-    public UserServiceClientException(String code) {
-        this.code = code;
-        this.message = MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code);
+    public UserServiceException(String code) {
+        super(MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code));
     }
 
     /**
@@ -47,9 +37,8 @@ public class UserServiceClientException extends RuntimeException {
      * @param code 错误码（如 "USER0002"）
      * @param args 参数（按顺序填充消息模板中的 {}, {}, {}...）
      */
-    public UserServiceClientException(String code, Object... args) {
-        this.code = code;
-        this.message = MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code, args);
+    public UserServiceException(String code, Object... args) {
+        super(MessageSourceHelper.getMessage(RESOURCE_BASE_NAME, code, args));
     }
 
     /**
@@ -58,9 +47,8 @@ public class UserServiceClientException extends RuntimeException {
      * @param code    错误码
      * @param message 错误消息
      */
-    public UserServiceClientException(String code, String message) {
-        this.code = code;
-        this.message = message;
+    public UserServiceException(String code, String message) {
+        super(code, message);
     }
 
 }

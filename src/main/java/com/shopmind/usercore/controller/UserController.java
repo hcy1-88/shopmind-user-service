@@ -10,7 +10,7 @@ import com.shopmind.framework.context.UserContext;
 import com.shopmind.usercore.dto.request.SetPasswordRequest;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
-import com.shopmind.usercore.exception.UserServiceClientException;
+import com.shopmind.usercore.exception.UserServiceException;
 import com.shopmind.usercore.service.UsersService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -34,8 +34,9 @@ public class UserController {
      * @return 用户
      */
     @GetMapping("/by-phone/{phoneNumber}")
-    public UserResponseDTO getUserByPhone(@PathVariable("phoneNumber") String phoneNumber){
-        return usersService.getUserByPhoneNumber(phoneNumber);
+    public ResultContext<UserResponseDTO> getUserByPhone(@PathVariable("phoneNumber") String phoneNumber){
+        UserResponseDTO userByPhoneNumber = usersService.getUserByPhoneNumber(phoneNumber);
+        return ResultContext.success(userByPhoneNumber);
     }
 
     /**
@@ -44,8 +45,9 @@ public class UserController {
      * @return 用户
      */
     @PostMapping("/register-by-phone")
-    public UserResponseDTO registerByPhone(@RequestParam String phoneNumber){
-        return usersService.createUserByPhoneNumber(phoneNumber);
+    public ResultContext<UserResponseDTO> registerByPhone(@RequestParam String phoneNumber){
+        UserResponseDTO userByPhoneNumber = usersService.createUserByPhoneNumber(phoneNumber);
+        return ResultContext.success(userByPhoneNumber);
     }
 
     /**
@@ -54,8 +56,9 @@ public class UserController {
      * @return 用户
      */
     @GetMapping("/{userId}")
-    public UserResponseDTO getUserByUserId(@PathVariable("userId") Long userId){
-        return usersService.getByUserId(userId);
+    public ResultContext<UserResponseDTO> getUserByUserId(@PathVariable("userId") Long userId){
+        UserResponseDTO byUserId = usersService.getByUserId(userId);
+        return ResultContext.success(byUserId);
     }
 
     /**
@@ -65,10 +68,11 @@ public class UserController {
      * @return 更新后的用户
      */
     @PostMapping("/{userId}/update")
-    public UserResponseDTO updateUser(
+    public ResultContext<UserResponseDTO> updateUser(
             @PathVariable("userId") Long userId,
             @RequestBody UpdateUserRequest request) {
-        return usersService.updateUser(userId, request);
+        UserResponseDTO userResponseDTO = usersService.updateUser(userId, request);
+        return ResultContext.success(userResponseDTO);
     }
 
     /**
@@ -77,13 +81,14 @@ public class UserController {
      */
     @RequireAuth
     @PostMapping("/password")
-    public void updatePasswordForLoggedIn(
+    public ResultContext<Void> updatePasswordForLoggedIn(
             @RequestHeader(ShopmindHeaderConstant.Calling_SERVICE_HEADER) String callerService,
             @Valid @RequestBody SetPasswordRequest request) {
         if (!StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
-            throw new UserServiceClientException("USER0006");
+            throw new UserServiceException("USER0006");
         }
         usersService.updatePassword(UserContext.userId(), request.getNewPassword());
+        return ResultContext.success();
     }
 
 
@@ -91,14 +96,15 @@ public class UserController {
      * 手机号设置密码
      */
     @PostMapping("/password/{phoneNumber}")
-    public void setPasswordByPhoneNumber(
+    public ResultContext<Void> setPasswordByPhoneNumber(
             @RequestHeader(ShopmindHeaderConstant.Calling_SERVICE_HEADER) String callerService,
             @PathVariable("phoneNumber") String phoneNumber,
             @Valid @RequestBody SetPasswordRequest request) {
         if (!StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
-            throw new UserServiceClientException("USER0006");
+            throw new UserServiceException("USER0006");
         }
         Preconditions.checkNotNull(phoneNumber, "手机号不能为空");
         usersService.setPasswordByPhoneNumber(phoneNumber, request.getNewPassword());
+        return ResultContext.success();
     }
 }
