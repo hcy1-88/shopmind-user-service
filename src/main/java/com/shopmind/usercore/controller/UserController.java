@@ -80,7 +80,7 @@ public class UserController {
     public void updatePasswordForLoggedIn(
             @RequestHeader(ShopmindHeaderConstant.Calling_SERVICE_HEADER) String callerService,
             @Valid @RequestBody SetPasswordRequest request) {
-        if (StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
+        if (!StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
             throw new UserServiceClientException("USER0006");
         }
         usersService.updatePassword(UserContext.userId(), request.getNewPassword());
@@ -95,7 +95,7 @@ public class UserController {
             @RequestHeader(ShopmindHeaderConstant.Calling_SERVICE_HEADER) String callerService,
             @PathVariable("phoneNumber") String phoneNumber,
             @Valid @RequestBody SetPasswordRequest request) {
-        if (StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
+        if (!StrUtil.equals(callerService, ServiceNameConstant.AUTH_SERVICE)) {
             throw new UserServiceClientException("USER0006");
         }
         Preconditions.checkNotNull(phoneNumber, "手机号不能为空");
