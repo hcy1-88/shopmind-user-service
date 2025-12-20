@@ -1,22 +1,20 @@
-package com.shopmind.usercore.entity;
+package com.shopmind.usercore.dto.response;
 
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.locationtech.jts.geom.Point;
 
 /**
- * 用户收货地址表
- * @TableName sm_users_addresses
+ * Description: 地址
+ * Author: huangcy
+ * Date: 2025-12-19
  */
-@TableName(value ="sm_users_addresses")
 @Data
-public class UserAddress {
+public class AddressResponseDto {
     /**
-     * 地址ID
+     * 地址ID, 以 string 传递给前端
      */
-    @TableId
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
 
     /**
@@ -65,11 +63,6 @@ public class UserAddress {
     private String detailAddress;
 
     /**
-     * 地理位置（WGS84）
-     */
-    private Point location;
-
-    /**
      * 是否默认地址
      */
     private Boolean isDefault;
@@ -83,19 +76,4 @@ public class UserAddress {
      * 联系人电话
      */
     private String contactPhone;
-
-    /**
-     * 创建时间
-     */
-    private Date createdAt;
-
-    /**
-     * 更新时间
-     */
-    private Date updatedAt;
-
-    /**
-     * 软删除时间
-     */
-    private Date deletedAt;
 }

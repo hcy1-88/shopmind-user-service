@@ -2,6 +2,7 @@ package com.shopmind.usercore.mapper;
 
 import com.shopmind.usercore.entity.UserAddress;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author hcy18
@@ -10,7 +11,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @Entity com.shopmind.entity.UsersAddresses
 */
 public interface UsersAddressesMapper extends BaseMapper<UserAddress> {
-
+    /**
+     * 对用户 userId 下的地址全部标记为非默认
+     * @param userId 用户 id
+     */
+    void markUnDefaultAddressByUserId(@Param("userId") Long userId);
 }
 
 

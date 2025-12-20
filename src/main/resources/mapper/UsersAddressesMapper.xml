@@ -32,4 +32,9 @@
         contact_name,contact_phone,created_at,
         updated_at,deleted_at
     </sql>
+    <update id="markUnDefaultAddressByUserId">
+        UPDATE sm_users_addresses
+        SET is_default = false
+        WHERE user_id = #{userId}
+    </update>
 </mapper>
