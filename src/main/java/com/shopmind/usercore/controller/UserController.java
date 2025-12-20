@@ -61,19 +61,6 @@ public class UserController {
         return ResultContext.success(byUserId);
     }
 
-    /**
-     * 修改用户
-     * @param userId 用户 id
-     * @param request 用户信息
-     * @return 更新后的用户
-     */
-    @PostMapping("/{userId}/update")
-    public ResultContext<UserResponseDTO> updateUser(
-            @PathVariable("userId") Long userId,
-            @RequestBody UpdateUserRequest request) {
-        UserResponseDTO userResponseDTO = usersService.updateUser(userId, request);
-        return ResultContext.success(userResponseDTO);
-    }
 
     /**
      * 为已登录的用户重置密码
@@ -106,5 +93,12 @@ public class UserController {
         Preconditions.checkNotNull(phoneNumber, "手机号不能为空");
         usersService.setPasswordByPhoneNumber(phoneNumber, request.getNewPassword());
         return ResultContext.success();
+    }
+
+    @RequireAuth
+    @PostMapping("/me/profile")
+    public ResultContext<UserResponseDTO> updateUserProfile(@RequestBody UpdateUserRequest request) {
+        UserResponseDTO userResponseDTO = usersService.updateUser(UserContext.userId(), request);
+        return ResultContext.success(userResponseDTO);
     }
 }

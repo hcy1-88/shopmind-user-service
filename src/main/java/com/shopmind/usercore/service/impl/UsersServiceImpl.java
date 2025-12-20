@@ -2,9 +2,12 @@ package com.shopmind.usercore.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.shopmind.framework.service.StorageService;
 import com.shopmind.usercore.constant.GenderConst;
+import com.shopmind.usercore.constant.StorageConst;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
 import com.shopmind.usercore.entity.User;
@@ -12,10 +15,13 @@ import com.shopmind.usercore.exception.UserServiceException;
 import com.shopmind.usercore.properties.UserDefaultProperties;
 import com.shopmind.usercore.service.UsersService;
 import com.shopmind.usercore.mapper.UsersMapper;
+import com.shopmind.usercore.utils.AvatarUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Base64;
 
 /**
 * @author hcy18
@@ -27,6 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements UsersService{
     @Resource
     private UserDefaultProperties userDefaultProperties;
+
+    @Resource
+    private StorageService storageService;
 
     /**
      * 根据手机号查询用户（返回时 gender 转中文）
@@ -80,15 +89,10 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         if (userId == null) {
             throw new UserServiceException("USER0002");
         }
-
-        // 检查用户是否存在
-        User existing = this.getById(userId);
-        if (existing == null || existing.getDeletedAt() != null) {
-            throw new UserServiceException("USER0003");
-        }
-
         // 构建更新对象（只设置非 null 字段）
         User update = convertToEntity(userId, request);
+        update.setAvatar(handleAvatarUpdate(request.getAvatar()));
+
         // 使用 updateById，MyBatisPlus 会自动忽略 null 字段（需确保字段为 null 而不是 ""）
         this.updateById(update);
 
@@ -151,6 +155,26 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
             user.setGender(request.getGender());
         }
         return user;
+    }
+
+    /**
+     * 将前端发来的 avatar data:base64 上传，返回 url
+     * @param avatar data:base64（前端传递）
+     * @return 头像 url
+     */
+    private String handleAvatarUpdate(String avatar) {
+        if(StrUtil.isEmpty(avatar) || avatar.startsWith("http:") || avatar.startsWith("https:")) {
+            return avatar;
+        }
+        if (AvatarUtil.isBase64Image(avatar)){
+            String base64Data = AvatarUtil.extractBase64Data(avatar);
+            byte[] decode = Base64.getDecoder().decode(base64Data);
+            String contentType = AvatarUtil.getMimeTypeFromBase64(avatar);
+            // 会生成默认文件名, 带 avatar 前缀
+            return storageService.uploadFile(decode, contentType, StorageConst.AVATAR);
+        } else {
+            throw new UserServiceException("USER0008");
+        }
     }
 }
 

@@ -6,7 +6,7 @@ import lombok.Data;
 public class UpdateUserRequest {
     private String nickname;
     private String avatar;
-    // 前端传英文：male/female/other/secret
+    // 前端传英文：male/female/other/secret,后端存的也是英文
     private String gender;
     private Integer age;
 }
