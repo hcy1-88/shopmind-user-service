@@ -8,15 +8,20 @@ import com.shopmind.framework.constant.ShopmindHeaderConstant;
 import com.shopmind.framework.context.ResultContext;
 import com.shopmind.framework.context.UserContext;
 import com.shopmind.usercore.dto.business.UserPreferencesDto;
+import com.shopmind.usercore.dto.request.AddressRequestDto;
 import com.shopmind.usercore.dto.request.SetPasswordRequest;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
+import com.shopmind.usercore.dto.response.AddressResponseDto;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
 import com.shopmind.usercore.exception.UserServiceException;
+import com.shopmind.usercore.service.UsersAddressesService;
 import com.shopmind.usercore.service.UsersPreferencesService;
 import com.shopmind.usercore.service.UsersService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Description: 用户接口
@@ -126,5 +131,41 @@ public class UserController {
     public ResultContext<UserPreferencesDto> createPreferences (@RequestBody UserPreferencesDto userPreferencesDto){
         UserPreferencesDto res = usersPreferencesService.createUserPreferences(UserContext.userId(), userPreferencesDto);
         return ResultContext.success(res);
+    }
+
+    @Resource
+    private UsersAddressesService userAddressesService;
+
+    @GetMapping("/{userId}/address")
+    public ResultContext<List<AddressResponseDto>> getAddress(@PathVariable Long userId) {
+        List<AddressResponseDto> addressesByUserId = userAddressesService.getAddressesByUserId(userId);
+        return ResultContext.success(addressesByUserId);
+    }
+
+    @PostMapping("/{userId}/address")
+    public ResultContext<AddressResponseDto> addAddress(@PathVariable Long userId, @RequestBody AddressRequestDto addressRequestDto) {
+        AddressResponseDto addressResponseDto = userAddressesService.addAddress(userId, addressRequestDto);
+        return ResultContext.success(addressResponseDto);
+    }
+
+    @PostMapping("/{userId}/address/{addressId}")
+    public ResultContext<AddressResponseDto> updateAddress(
+            @PathVariable("userId") Long userId,
+            @PathVariable("addressId") Long addressId,
+            @RequestBody AddressRequestDto addressRequestDto) {
+        AddressResponseDto res = userAddressesService.updateAddress(userId, addressId, addressRequestDto);
+        return  ResultContext.success(res);
+    }
+
+    @DeleteMapping("/{userId}/address/{addressId}")
+    public ResultContext<Void> deleteAddress (@PathVariable("userId") Long userId, @PathVariable("addressId")  Long addressId) {
+        userAddressesService.deleteAddress(userId, addressId);
+        return ResultContext.success();
+    }
+
+    @PostMapping("/{userId}/address/default/{addressId}")
+    public ResultContext<Void> setDefaultAddress(@PathVariable("userId") Long userId, @PathVariable("addressId") Long addressId ) {
+        userAddressesService.setDefaultAddress(userId, addressId);
+        return ResultContext.success();
     }
 }
