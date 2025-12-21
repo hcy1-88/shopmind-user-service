@@ -28,7 +28,7 @@ public class UserPreference {
     private Long userId;
 
     /**
-     * 兴趣标签数组
+     * 兴趣爱好 code，对应 {@link com.shopmind.usercore.entity.Interest} 的 code 字段
      */
     @TableField(typeHandler = ArrayTypeHandler.class)
     private List<String> interests;
