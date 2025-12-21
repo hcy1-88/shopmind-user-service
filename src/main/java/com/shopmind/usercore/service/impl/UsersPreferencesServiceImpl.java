@@ -41,6 +41,9 @@ public class UsersPreferencesServiceImpl extends ServiceImpl<UsersPreferencesMap
         LambdaQueryWrapper<UserPreference> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserPreference::getUserId, userId);
         UserPreference userPreference = this.getOne(wrapper);
+        if (userPreference == null) {
+            return this.createUserPreferences(userId, userPreferencesDto);
+        }
         // 更新
         userPreference.setInterests(userPreferencesDto.getInterests());
         userPreference.setLanguage(userPreferencesDto.getLanguage());
