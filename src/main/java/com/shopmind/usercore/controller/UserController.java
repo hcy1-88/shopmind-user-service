@@ -7,10 +7,12 @@ import com.shopmind.framework.constant.ServiceNameConstant;
 import com.shopmind.framework.constant.ShopmindHeaderConstant;
 import com.shopmind.framework.context.ResultContext;
 import com.shopmind.framework.context.UserContext;
+import com.shopmind.usercore.dto.business.UserPreferencesDto;
 import com.shopmind.usercore.dto.request.SetPasswordRequest;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
 import com.shopmind.usercore.exception.UserServiceException;
+import com.shopmind.usercore.service.UsersPreferencesService;
 import com.shopmind.usercore.service.UsersService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
@@ -27,6 +29,9 @@ public class UserController {
     
     @Resource
     private UsersService usersService;
+
+    @Resource
+    private UsersPreferencesService usersPreferencesService;
 
     /**
      * 手机号查询用户
@@ -100,5 +105,26 @@ public class UserController {
     public ResultContext<UserResponseDTO> updateUserProfile(@RequestBody UpdateUserRequest request) {
         UserResponseDTO userResponseDTO = usersService.updateUser(UserContext.userId(), request);
         return ResultContext.success(userResponseDTO);
+    }
+
+    @RequireAuth
+    @GetMapping("/me/preferences")
+    public ResultContext<UserPreferencesDto> getUserPreferences (){
+        UserPreferencesDto res = usersPreferencesService.getUserPreferencesByUserId(UserContext.userId());
+        return ResultContext.success(res);
+    }
+
+    @RequireAuth
+    @PutMapping("/me/preferences")
+    public ResultContext<UserPreferencesDto> updateUserPreferences (@RequestBody UserPreferencesDto userPreferencesDto){
+        UserPreferencesDto res = usersPreferencesService.updateUserPreferencesByUserId(UserContext.userId(), userPreferencesDto);
+        return ResultContext.success(res);
+    }
+
+    @RequireAuth
+    @PostMapping("/me/preferences")
+    public ResultContext<UserPreferencesDto> createPreferences (@RequestBody UserPreferencesDto userPreferencesDto){
+        UserPreferencesDto res = usersPreferencesService.createUserPreferences(UserContext.userId(), userPreferencesDto);
+        return ResultContext.success(res);
     }
 }

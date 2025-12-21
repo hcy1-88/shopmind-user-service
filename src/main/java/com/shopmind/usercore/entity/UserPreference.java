@@ -1,8 +1,12 @@
 package com.shopmind.usercore.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
+import java.util.List;
+
+import com.shopmind.usercore.handler.type.ArrayTypeHandler;
 import lombok.Data;
 
 /**
@@ -26,7 +30,8 @@ public class UserPreference {
     /**
      * 兴趣标签数组
      */
-    private Object interests;
+    @TableField(typeHandler = ArrayTypeHandler.class)
+    private List<String> interests;
 
     /**
      * 语言偏好：zh/en
