@@ -1,6 +1,7 @@
 package com.shopmind.usercore.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shopmind.usercore.enums.Gender;
 import lombok.Data;
 
 import java.util.Date;
@@ -12,7 +13,7 @@ public class UserResponseDTO {
     private String phoneNumber;
     private String nickname;
     private String avatar;
-    private String gender;
+    private Gender gender;
     private Integer age;
     private Date createdAt;
     private Date updatedAt;
