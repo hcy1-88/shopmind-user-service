@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
+
+import com.shopmind.usercore.enums.Gender;
 import lombok.Data;
 
 /**
@@ -41,9 +43,9 @@ public class User {
     private String avatar;
 
     /**
-     * 性别：male/female/other
+     * 性别：male/female/other/secret
      */
-    private String gender;
+    private Gender gender;
 
     /**
      * 年龄

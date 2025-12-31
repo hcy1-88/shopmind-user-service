@@ -11,6 +11,7 @@ import com.shopmind.usercore.constant.StorageConst;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
 import com.shopmind.usercore.entity.User;
+import com.shopmind.usercore.enums.Gender;
 import com.shopmind.usercore.exception.UserServiceException;
 import com.shopmind.usercore.properties.UserDefaultProperties;
 import com.shopmind.usercore.service.UsersService;
@@ -68,7 +69,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
         user.setPhoneNumber(phoneNumber);
         user.setNickname(userDefaultProperties.getNickname());
         user.setAvatar(userDefaultProperties.getAvatar());
-        user.setGender(userDefaultProperties.getGender());
+        user.setGender(Gender.fromValue(userDefaultProperties.getGender()));
         // createdAt / updatedAt 由自动填充处理
 
         this.save(user);
@@ -152,7 +153,7 @@ public class UsersServiceImpl extends ServiceImpl<UsersMapper, User> implements 
             if (!GenderConst.isValid(request.getGender())) {
                 throw new UserServiceException("USER0004");
             }
-            user.setGender(request.getGender());
+            user.setGender(Gender.fromValue(request.getGender()));
         }
         return user;
     }
