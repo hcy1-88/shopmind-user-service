@@ -4,19 +4,5 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shopmind.usercore.mapper.UsersPreferencesMapper">
 
-    <resultMap id="BaseResultMap" type="com.shopmind.usercore.entity.UserPreference">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="interests" column="interests" jdbcType="OTHER"/>
-            <result property="language" column="language" jdbcType="VARCHAR"/>
-            <result property="notificationSettings" column="notification_settings" jdbcType="OTHER"/>
-            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
-            <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
-    </resultMap>
 
-    <sql id="Base_Column_List">
-        id,user_id,interests,
-        language,notification_settings,created_at,
-        updated_at
-    </sql>
 </mapper>

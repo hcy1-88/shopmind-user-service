@@ -1,6 +1,7 @@
 package com.shopmind.usercore.service;
 
 import com.shopmind.usercore.dto.business.UserPreferencesDto;
+import com.shopmind.usercore.dto.response.UserInterestsResponseDTO;
 import com.shopmind.usercore.entity.UserPreference;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -32,4 +33,11 @@ public interface UsersPreferencesService extends IService<UserPreference> {
      * @return 用户偏好
      */
     UserPreferencesDto createUserPreferences(Long userId, UserPreferencesDto userPreferencesDto);
+
+    /**
+     * 用户的兴趣爱好获取
+     * @param userId 用户 id
+     * @return 兴趣
+     */
+    UserInterestsResponseDTO getUserInterestsByUserId(Long userId);
 }

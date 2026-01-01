@@ -13,6 +13,7 @@ import com.shopmind.usercore.dto.request.AddressRequestDto;
 import com.shopmind.usercore.dto.request.SetPasswordRequest;
 import com.shopmind.usercore.dto.request.UpdateUserRequest;
 import com.shopmind.usercore.dto.response.AddressResponseDto;
+import com.shopmind.usercore.dto.response.UserInterestsResponseDTO;
 import com.shopmind.usercore.dto.response.UserResponseDTO;
 import com.shopmind.usercore.exception.UserServiceException;
 import com.shopmind.usercore.service.InterestService;
@@ -173,5 +174,11 @@ public class UserController {
     public ResultContext<List<InterestDto>> getCommonInterests() {
         List<InterestDto> allInterest = interestService.getAllInterest();
         return ResultContext.success(allInterest);
+    }
+
+    @GetMapping("/interests")
+    public ResultContext<UserInterestsResponseDTO> getUserInterestsByUserId(@RequestParam("userId") Long userId) {
+        UserInterestsResponseDTO res = usersPreferencesService.getUserInterestsByUserId(userId);
+        return ResultContext.success(res);
     }
 }

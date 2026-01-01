@@ -13,7 +13,7 @@ import lombok.Data;
  * 用户偏好设置表
  * @TableName sm_users_preferences
  */
-@TableName(value ="sm_users_preferences")
+@TableName(value ="sm_users_preferences", autoResultMap = true)
 @Data
 public class UserPreference {
     /**
