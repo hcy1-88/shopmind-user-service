@@ -37,6 +37,6 @@ public enum BehaviorTargetType {
                 return type;
             }
         }
-        return null; // 或抛异常
+        throw new IllegalArgumentException(value + " is not a valid value for BehaviorTargetType.");
     }
 }

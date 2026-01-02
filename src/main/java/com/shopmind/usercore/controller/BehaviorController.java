@@ -2,6 +2,7 @@ package com.shopmind.usercore.controller;
 
 import com.shopmind.framework.annotation.RequireAuth;
 import com.shopmind.framework.context.ResultContext;
+import com.shopmind.usercore.dto.request.BehaviorCreatedRequestDTO;
 import com.shopmind.usercore.dto.request.UserBehaviorRequest;
 import com.shopmind.usercore.dto.response.UserBehaviorResponseDTO;
 import com.shopmind.usercore.service.UserBehaviorsService;
@@ -37,4 +38,11 @@ public class BehaviorController {
         List<UserBehaviorResponseDTO> userBehaviors = userBehaviorsService.findUserBehaviors(userBehaviorRequest);
         return ResultContext.success(userBehaviors);
     }
+
+    @PostMapping("/creation")
+    public ResultContext<Void> createBehavior(@Valid @RequestBody BehaviorCreatedRequestDTO behaviorCreatedRequestDTO) {
+        userBehaviorsService.createUserBehavior(behaviorCreatedRequestDTO);
+        return ResultContext.success();
+    }
+
 }

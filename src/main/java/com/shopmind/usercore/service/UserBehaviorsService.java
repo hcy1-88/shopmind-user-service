@@ -1,5 +1,6 @@
 package com.shopmind.usercore.service;
 
+import com.shopmind.usercore.dto.request.BehaviorCreatedRequestDTO;
 import com.shopmind.usercore.dto.request.UserBehaviorRequest;
 import com.shopmind.usercore.dto.response.UserBehaviorResponseDTO;
 import com.shopmind.usercore.entity.UsersBehavior;
@@ -21,4 +22,8 @@ public interface UserBehaviorsService extends IService<UsersBehavior> {
      */
     List<UserBehaviorResponseDTO> findUserBehaviors(UserBehaviorRequest userBehaviorRequest);
 
+    /**
+     * 创建用户行为，用于埋点
+     */
+    void createUserBehavior(BehaviorCreatedRequestDTO createdRequestDTO);
 }
