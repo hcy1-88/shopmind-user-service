@@ -1,5 +1,6 @@
 package com.shopmind.usercore.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shopmind.usercore.enums.BehaviorTargetType;
 import com.shopmind.usercore.enums.BehaviorType;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class UserBehaviorResponseDTO {
     /**
      * 用户 id
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
 
     /**

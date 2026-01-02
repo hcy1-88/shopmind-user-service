@@ -1,5 +1,6 @@
 package com.shopmind.usercore.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Map;
  */
 @Data
 public class UserInterestsResponseDTO {
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long userId;
 
     /**
