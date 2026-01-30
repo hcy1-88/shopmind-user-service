@@ -1,4 +1,4 @@
-y# 用户服务
+# 用户服务
 
 ShopMind 用户中心服务，负责用户信息的完整管理，包括用户档案、凭证、偏好设置、行为埋点等功能。
 
@@ -8,7 +8,7 @@ ShopMind 用户中心服务，负责用户信息的完整管理，包括用户�
 - **Spring Boot** 3 + **Spring Cloud Alibaba** (Nacos 注册中心/配置中心)
 - **数据库**: PostgreSQL + PostGIS (空间数据支持)
 - **ORM**: MyBatis Plus
-- **对象存储**: AWS S3 SDK
+- **对象存储**: AWS S3 SDK + rustfs
 - **地理服务**: 百度地图 Geocoding API
 
 ## 核心功能
